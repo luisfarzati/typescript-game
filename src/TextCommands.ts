@@ -78,6 +78,18 @@ const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string 
   return ctx
 }
 
+const healCharacterCommand = (ctx: CommandContext, id: string, amount: string = '0') => {
+  const char = ctx.game.healCharacter(parseInt(id), parseInt(amount))
+  if (!char.alive) {
+    console.log(`#${id} is dead!`)
+  }
+  else {
+    console.log(`Healing char #${id} with ${amount} health points`)
+    console.log(`#${id} ${JSON.stringify(char)}`)
+    }
+  return ctx
+}
+
 const noopCommand = (ctx: any) => ctx
 
 type TextCommand = {
@@ -118,5 +130,11 @@ const textInterfaceCommands: TextCommand[] = [
     args: ['id', 'dmg'],
     description: 'attack a character',
     handler: attackCharacterCommand
+  },
+  {
+    names: new Set(['heal']),
+    args: ['id', 'amt'],
+    description: 'heal a character',
+    handler: healCharacterCommand
   }
 ]

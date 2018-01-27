@@ -8,4 +8,11 @@ export class Character {
     this.alive = this.health > 0
     return this
   }
+
+  receiveHealing(amount: number) {
+    if (this.alive) {
+      this.health = Math.min(1000, this.health += amount)
+    }
+    return this
+  }
 }

@@ -36,4 +36,24 @@ describe('Character', () => {
       expect(char.alive).to.be.false
     })
   })
+
+  describe('receiveHealing', () => {
+    it('should increase health by amount of healing', () => {
+      char.receiveDamage(500)
+      char.receiveHealing(100)
+      expect(char.health).to.equal(600)
+    })
+
+    it('should do nothing if character is dead', () => {
+      char.receiveDamage(1001)
+      char.receiveHealing(1)
+      expect(char.health).to.equal(0)
+      expect(char.alive).to.be.false
+    })
+
+    // it('should kill character if health drops to zero', () => {
+    //   char.receiveDamage(1000)
+    //   expect(char.alive).to.be.false
+    // })
+  })
 })

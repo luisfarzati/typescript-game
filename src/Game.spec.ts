@@ -45,4 +45,17 @@ describe('Game', () => {
       expect(receiveDamage).to.be.calledOnce
     })
   })
+
+  describe('heal character', () => {
+    it('should throw if specified char does not exist', () => {
+      expect(() => game.healCharacter(0, 0)).to.throw(GameError)
+    })
+
+    // it('should invoke Character.receiveDamage', () => {
+    //   const { char } = game.spawnCharacter()
+    //   const receiveDamage = spy(char, 'receiveDamage')
+    //   game.attackCharacter(0, 0)
+    //   expect(receiveDamage).to.be.calledOnce
+    // })
+  })
 })

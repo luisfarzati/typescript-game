@@ -15,6 +15,12 @@ export class Game {
     if (!char) throw new GameError(`Invalid char ${id}`)
     return char.receiveDamage(damage)
   }
+
+  healCharacter(id: number, amount: number) {
+    const char = this.roster.get(id)
+    if (!char) throw new GameError(`Invalid char ${id}`)
+    return char.receiveHealing(amount)
+  }
 }
 
 export class GameError extends Error {
