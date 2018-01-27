@@ -18,8 +18,12 @@ export const parseTextCommand = (line: string = '') => {
   return { command: handler, args }
 }
 
-type CommandContext = {
-  game: Game
+export type CommandContext = {
+  game: Game,
+  player?: {
+    id: number,
+    char: Character
+  }
 }
 
 const spaces = (len: number) => (
@@ -63,7 +67,8 @@ const spawnCharacterCommand = (ctx: CommandContext) => {
 
 const listCharactersCommand = (ctx: CommandContext) => {
   for (let [id, char] of ctx.game.roster.entries()) {
-    console.log(`#${id} ${JSON.stringify(char)}`)
+    const isPlayer = ctx.player && ctx.player.id === id
+    console.log(`#${id} ${isPlayer ? '(player)' : ''} ${JSON.stringify(char)}`)
   }
   return ctx
 }
@@ -87,6 +92,18 @@ const healCharacterCommand = (ctx: CommandContext, id: string, amount: string = 
     console.log(`Healing char #${id} with ${amount} health points`)
     console.log(`#${id} ${JSON.stringify(char)}`)
     }
+  return ctx
+}
+
+const makeCharacterPlayerCommand = (ctx: CommandContext, id: string) => {
+  const charId = parseInt(id)
+  const char = ctx.game.roster.get(charId)
+  if (!char) {
+    console.log(`Char #${id} does not exist.`)
+  }
+  else {
+    ctx.player = { id: charId, char }
+  }
   return ctx
 }
 
@@ -136,5 +153,11 @@ const textInterfaceCommands: TextCommand[] = [
     args: ['id', 'amt'],
     description: 'heal a character',
     handler: healCharacterCommand
+  },
+  {
+    names: new Set(['player']),
+    args: ['id'],
+    description: 'use a character as player',
+    handler: makeCharacterPlayerCommand
   }
 ]

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 import { createInterface } from 'readline'
 import { Game, GameError } from './Game'
-import { parseTextCommand, InvalidCommandError } from './TextCommands'
+import { parseTextCommand, InvalidCommandError, CommandContext } from './TextCommands'
 
 const VERSION = process.env.VERSION || ''
 
 const main = () => {
-  let context = {
+  let context: CommandContext = {
     game: new Game()
   }
 
@@ -30,7 +30,12 @@ const main = () => {
   })
 
   readline.on('line', () => {
-    process.stdout.write('> ')
+    let prefix = ''
+    if (context.player) {
+      const { id, char } = context.player
+      prefix = `#${id} H:${char.health} L:${char.level}`
+    }
+    process.stdout.write(`${prefix}> `)
   })
 }
 
