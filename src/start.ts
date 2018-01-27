@@ -25,7 +25,7 @@ const main = () => {
       if (error instanceof InvalidCommandError) {
         console.log(`${error.message}. Try "help" for a list of commands.`)
       }
-      if (error instanceof GameCommandViolationError) {
+      if (error instanceof GameCommandViolationError || error instanceof GameError) {
         console.log(error.message)
       }
       else throw error

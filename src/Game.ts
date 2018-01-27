@@ -21,6 +21,23 @@ export class Game {
     if (!char) throw new GameError(`Invalid char ${id}`)
     return char.receiveHealing(amount)
   }
+
+  calculateDamage(attackerId: number, foeId: number, damage: number) {
+    const attacker = this.roster.get(attackerId)
+    if (!attacker) throw new GameError(`Invalid attacker char ${attackerId}`)
+
+    const foe = this.roster.get(foeId)
+    if (!foe) throw new GameError(`Invalid foe char ${foeId}`)
+
+    let multiplier = 1
+    if (attacker.level <= foe.level - 5) {
+      multiplier = .5
+    }
+    else if (attacker.level >= foe.level + 5) {
+      multiplier = 1.5
+    }
+    return damage * multiplier
+  }
 }
 
 export class GameError extends Error {

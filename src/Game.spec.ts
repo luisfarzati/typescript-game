@@ -58,4 +58,43 @@ describe('Game', () => {
       expect(receiveHealing).to.be.calledOnce
     })
   })
+
+  describe('damage calculation', () => {
+    it('should throw if attacker char does not exist', () => {
+      expect(() => game.calculateDamage(0, 0, 0)).to.throw(GameError)
+    })
+
+    it('should throw if foe char does not exist', () => {
+      const attacker = game.spawnCharacter()
+      expect(() => game.calculateDamage(0, 1, 0)).to.throw(GameError)
+    })
+
+    it('should return original damage when foe and attacker are within less than 5 levels away', () => {
+      const attacker = game.spawnCharacter()
+      const foe = game.spawnCharacter()
+      for (let delta = 1; delta < 5; delta++) {
+        foe.char.level = attacker.char.level + delta
+        const damage = game.calculateDamage(0, 1, 10)
+        expect(damage).to.equal(10)
+      }
+    })
+
+    it('should return -50% when foe is 5 or more levels above the attacker', () => {
+      const attacker = game.spawnCharacter()
+      const foe = game.spawnCharacter()
+      foe.char.level = attacker.char.level + 5
+
+      const damage = game.calculateDamage(0, 1, 10)
+      expect(damage).to.equal(5)
+    })
+
+    it('should return +50% when foe is 5 or more levels below the attacker', () => {
+      const attacker = game.spawnCharacter()
+      const foe = game.spawnCharacter()
+      attacker.char.level = foe.char.level + 5
+
+      const damage = game.calculateDamage(0, 1, 10)
+      expect(damage).to.equal(15)
+    })
+  })
 })

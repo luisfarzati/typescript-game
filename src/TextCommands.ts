@@ -81,14 +81,20 @@ const listCharactersCommand = (ctx: CommandContext) => {
 
 const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string = '0') => {
   const charId = parseInt(id)
+  let effectiveDamage = parseInt(damage)
+
   if (ctx.player && ctx.player.id === charId) {
     throw new GameCommandViolationError(`You cannot attack yourself, you maniac!`)
   }
   else if (ctx.player && !ctx.player.char.alive) {
     throw new GameCommandViolationError('You cannot attack anybody, you are dead!')
   }
-  const char = ctx.game.attackCharacter(charId, parseInt(damage))
-  console.log(`Attacking char #${id} with ${damage} damage points`)
+  else if (ctx.player) {
+    effectiveDamage = ctx.game.calculateDamage(ctx.player.id, charId, effectiveDamage)
+  }
+
+  const char = ctx.game.attackCharacter(charId, effectiveDamage)
+  console.log(`Attacking char #${id} with ${effectiveDamage} damage points`)
   console.log(`#${id} ${JSON.stringify(char)}`)
   if (!char.alive) {
     console.log(`#${id} is dead!`)
@@ -104,6 +110,7 @@ const healCharacterCommand = (ctx: CommandContext, id: string, amount: string = 
   else if (ctx.player && !ctx.player.char.alive) {
     throw new GameCommandViolationError('You cannot heal yourself, you are dead!')
   }
+
   const char = ctx.game.healCharacter(charId, parseInt(amount))
   if (!char.alive) {
     console.log(`#${id} is dead!`)
