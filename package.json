@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "typescript-app",
-  "version": "0.1.0",
+  "name": "typescript-game",
+  "version": "0.2.0",
   "main": "src/start.ts",
   "scripts": {
     "build": "yarn test && tsc",
