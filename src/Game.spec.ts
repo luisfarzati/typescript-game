@@ -1,7 +1,11 @@
-import { Game } from './Game'
+import { Game, GameError } from './Game'
 import { Character } from './Character'
-import { expect } from 'chai'
+import { expect, use as useChaiPlugin } from 'chai'
+import { spy } from 'sinon'
+import * as sinon from 'sinon-chai'
 import 'mocha'
+
+useChaiPlugin(sinon)
 
 describe('Game', () => {
   let game: Game
@@ -14,7 +18,7 @@ describe('Game', () => {
     expect(game.roster.size).to.equal(0)
   })
 
-  describe ('spawn character', () => {
+  describe('spawn character', () => {
     it('should return a spawn id and character', () => {
       const spawn = game.spawnCharacter()
       expect(spawn).to.have.property('id')
@@ -26,6 +30,19 @@ describe('Game', () => {
       const spawn = game.spawnCharacter()
       expect(game.roster.size).to.equal(1)
       expect(game.roster).to.include(spawn.char)
+    })
+  })
+
+  describe('attack character', () => {
+    it('should throw if specified char does not exist', () => {
+      expect(() => game.attackCharacter(0, 0)).to.throw(GameError)
+    })
+
+    it('should invoke Character.receiveDamage', () => {
+      const { char } = game.spawnCharacter()
+      const receiveDamage = spy(char, 'receiveDamage')
+      game.attackCharacter(0, 0)
+      expect(receiveDamage).to.be.calledOnce
     })
   })
 })

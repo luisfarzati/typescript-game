@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createInterface } from 'readline'
-import { Game } from './Game'
+import { Game, GameError } from './Game'
 import { parseTextCommand, InvalidCommandError } from './TextCommands'
 
 const VERSION = process.env.VERSION || ''
@@ -18,8 +18,8 @@ const main = () => {
 
   readline.on('line', (line) => {
     try {
-      const command = parseTextCommand(line)
-      context = command(context)
+      const { command, args } = parseTextCommand(line)
+      context = command(context, ...args)
     }
     catch (error) {
       if (error instanceof InvalidCommandError) {

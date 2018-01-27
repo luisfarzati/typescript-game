@@ -9,12 +9,13 @@ export class InvalidCommandError extends Error {
 
 export const parseTextCommand = (line: string = '') => {
   const [name, ...args] = line.trim().toLowerCase().split(/\s+/)
-  if (!name) return noopCommand
+  if (!name) return { command: noopCommand, args: [] }
 
   const command = textInterfaceCommands.find(cmd => cmd.names.has(name))
   if (!command) throw new InvalidCommandError(name)
 
-  return command.handler.bind(undefined, ...args)
+  const handler = command.handler.bind(undefined)
+  return { command: handler, args }
 }
 
 type CommandContext = {
@@ -33,10 +34,11 @@ const helpCommand = (ctx: CommandContext) => {
   const nameDescription =
     textInterfaceCommands.map(cmd => ({
       names: [...cmd.names.keys()].join(', '),
+      args: (cmd.args || []).map(a => `<${a}>`).join(' '),
       description: cmd.description
     }))
   const lines =
-    nameDescription.map(nd => `${rpad(nd.names, 30)}${nd.description}`)
+    nameDescription.map(nd => `${rpad(nd.names, 12)}${rpad(nd.args, 20)}${nd.description}`)
 
   console.log(lines.join('\n').concat('\n'))
   return ctx
@@ -66,9 +68,23 @@ const listCharactersCommand = (ctx: CommandContext) => {
   return ctx
 }
 
+const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string) => {
+  const char = ctx.game.attackCharacter(parseInt(id), parseInt(damage))
+  console.log(`Attacking char #${id} with ${damage} damage points`)
+  console.log(`#${id} ${JSON.stringify(char)}`)
+  return ctx
+}
+
 const noopCommand = (ctx: any) => ctx
 
-const textInterfaceCommands = [
+type TextCommand = {
+  names: Set<string>
+  args?: string[],
+  description: string
+  handler: Function
+}
+
+const textInterfaceCommands: TextCommand[] = [
   {
     names: new Set(['help']),
     description: 'shows available commands',
@@ -93,5 +109,11 @@ const textInterfaceCommands = [
     names: new Set(['ls', 'list']),
     description: 'list characters',
     handler: listCharactersCommand
+  },
+  {
+    names: new Set(['attack']),
+    args: ['id', 'dmg'],
+    description: 'attack a character',
+    handler: attackCharacterCommand
   }
 ]
