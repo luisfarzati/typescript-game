@@ -16,6 +16,10 @@ export const parseTextCommand = (line: string = '') => {
   return command.handler.bind(undefined, ...args)
 }
 
+type CommandContext = {
+  game: Game
+}
+
 const spaces = (len: number) => (
   [...Array(len).keys()].map(() => '').join(' ')
 )
@@ -24,7 +28,7 @@ const rpad = (s: string, len: number) => (
   `${s}${spaces(len)}`.slice(0, len)
 )
 
-const helpCommand = (ctx: any) => {
+const helpCommand = (ctx: CommandContext) => {
   const nameDescription =
     textInterfaceCommands.map(cmd => ({
       names: [...cmd.names.keys()].join(', '),
@@ -42,9 +46,15 @@ const quitCommand = () => {
   process.exit(0)
 }
 
-const newGameCommand = (ctx: { game: Game }) => {
+const newGameCommand = (ctx: CommandContext) => {
   ctx.game = new Game()
   console.log('Started new game.')
+  return ctx
+}
+
+const spawnCharacterCommand = (ctx: CommandContext) => {
+  const spawn = ctx.game.spawnCharacter()
+  console.log(`Spawned char #${spawn.id}: ${JSON.stringify(spawn.char)}`)
   return ctx
 }
 
@@ -65,5 +75,10 @@ const textInterfaceCommands = [
     names: new Set(['new', 'reset']),
     description: 'starts a new game',
     handler: newGameCommand
+  },
+  {
+    names: new Set(['spawn']),
+    description: 'spawns a character',
+    handler: spawnCharacterCommand
   }
 ]

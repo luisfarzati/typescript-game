@@ -7,7 +7,7 @@ const VERSION = process.env.VERSION || ''
 
 const main = () => {
   let context = {
-    currentGame: new Game()
+    game: new Game()
   }
 
   console.log(`This is a TypeScript game ${VERSION}\n`)
