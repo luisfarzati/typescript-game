@@ -1,4 +1,5 @@
 import { Game } from './Game'
+import { Character } from './Character';
 
 export class InvalidCommandError extends Error {
   constructor (name: string) {
@@ -58,6 +59,13 @@ const spawnCharacterCommand = (ctx: CommandContext) => {
   return ctx
 }
 
+const listCharactersCommand = (ctx: CommandContext) => {
+  for (let [id, char] of ctx.game.roster.entries()) {
+    console.log(`#${id} ${JSON.stringify(char)}`)
+  }
+  return ctx
+}
+
 const noopCommand = (ctx: any) => ctx
 
 const textInterfaceCommands = [
@@ -80,5 +88,10 @@ const textInterfaceCommands = [
     names: new Set(['spawn']),
     description: 'spawns a character',
     handler: spawnCharacterCommand
+  },
+  {
+    names: new Set(['ls', 'list']),
+    description: 'list characters',
+    handler: listCharactersCommand
   }
 ]
