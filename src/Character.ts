@@ -4,7 +4,8 @@ export class Character {
   alive = true
 
   receiveDamage(amount: number) {
-    this.health -= amount
+    this.health = Math.max(0, this.health -= amount)
+    this.alive = this.health > 0
     return this
   }
 }

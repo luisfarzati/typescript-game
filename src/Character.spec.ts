@@ -25,5 +25,15 @@ describe('Character', () => {
       char.receiveDamage(100)
       expect(char.health).to.equal(1000 - 100)
     })
+
+    it('should make health = 0 if damage exceeds the current health', () => {
+      char.receiveDamage(1001)
+      expect(char.health).to.equal(0)
+    })
+
+    it('should kill character if health drops to zero', () => {
+      char.receiveDamage(1000)
+      expect(char.alive).to.be.false
+    })
   })
 })

@@ -72,6 +72,9 @@ const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string)
   const char = ctx.game.attackCharacter(parseInt(id), parseInt(damage))
   console.log(`Attacking char #${id} with ${damage} damage points`)
   console.log(`#${id} ${JSON.stringify(char)}`)
+  if (!char.alive) {
+    console.log(`#${id} is dead!`)
+  }
   return ctx
 }
 
