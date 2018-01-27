@@ -51,11 +51,11 @@ describe('Game', () => {
       expect(() => game.healCharacter(0, 0)).to.throw(GameError)
     })
 
-    // it('should invoke Character.receiveDamage', () => {
-    //   const { char } = game.spawnCharacter()
-    //   const receiveDamage = spy(char, 'receiveDamage')
-    //   game.attackCharacter(0, 0)
-    //   expect(receiveDamage).to.be.calledOnce
-    // })
+    it('should invoke Character.receiveHealing', () => {
+      const { char } = game.spawnCharacter()
+      const receiveHealing = spy(char, 'receiveHealing')
+      game.healCharacter(0, 0)
+      expect(receiveHealing).to.be.calledOnce
+    })
   })
 })

@@ -51,9 +51,9 @@ describe('Character', () => {
       expect(char.alive).to.be.false
     })
 
-    // it('should kill character if health drops to zero', () => {
-    //   char.receiveDamage(1000)
-    //   expect(char.alive).to.be.false
-    // })
+    it('should top at maximum health', () => {
+      char.receiveHealing(2000)
+      expect(char.health).to.equal(1000)
+    })
   })
 })
