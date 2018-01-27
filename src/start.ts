@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 import { createInterface } from 'readline'
+import { Game } from './Game'
 import { parseTextCommand, InvalidCommandError } from './TextCommands'
 
 const VERSION = process.env.VERSION || ''
 
 const main = () => {
+  let context = {
+    currentGame: new Game()
+  }
+
   console.log(`This is a TypeScript game ${VERSION}\n`)
   console.log(`Type "help" for a list of commands; "quit" or ctrl-d to exit.`)
 
@@ -14,7 +19,7 @@ const main = () => {
   readline.on('line', (line) => {
     try {
       const command = parseTextCommand(line)
-      command()
+      context = command(context)
     }
     catch (error) {
       if (error instanceof InvalidCommandError) {
