@@ -68,7 +68,7 @@ const listCharactersCommand = (ctx: CommandContext) => {
   return ctx
 }
 
-const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string) => {
+const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string = '0') => {
   const char = ctx.game.attackCharacter(parseInt(id), parseInt(damage))
   console.log(`Attacking char #${id} with ${damage} damage points`)
   console.log(`#${id} ${JSON.stringify(char)}`)
