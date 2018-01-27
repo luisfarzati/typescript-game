@@ -61,6 +61,7 @@ const quitCommand = () => {
 
 const newGameCommand = (ctx: CommandContext) => {
   ctx.game = new Game()
+  ctx.player = undefined
   console.log('Started new game.')
   return ctx
 }
