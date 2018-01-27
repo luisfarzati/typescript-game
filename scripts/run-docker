@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[", ]//g')
+docker build --force-rm --squash --build-arg "VERSION=$VERSION" -t typescript-app .
+echo
+docker run --rm -it typescript-app

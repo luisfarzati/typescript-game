@@ -1,0 +1,8 @@
+.dockerignore
+.git
+.gitignore
+dist
+Dockerfile
+husky.config.js
+node_modules
+scripts
