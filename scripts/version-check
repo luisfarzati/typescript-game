@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 CURR_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
-PREV_VERSION=$(git show HEAD^:package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
+PREV_VERSION=$(git show HEAD:package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[",]//g')
 
 if [ "$CURR_VERSION" == "$PREV_VERSION" ];
 then
