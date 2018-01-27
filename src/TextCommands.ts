@@ -7,6 +7,12 @@ export class InvalidCommandError extends Error {
   }
 }
 
+export class GameCommandViolationError extends Error {
+  constructor (message: string) {
+    super(message)
+  }
+}
+
 export const parseTextCommand = (line: string = '') => {
   const [name, ...args] = line.trim().toLowerCase().split(/\s+/)
   if (!name) return { command: noopCommand, args: [] }
@@ -74,7 +80,11 @@ const listCharactersCommand = (ctx: CommandContext) => {
 }
 
 const attackCharacterCommand = (ctx: CommandContext, id: string, damage: string = '0') => {
-  const char = ctx.game.attackCharacter(parseInt(id), parseInt(damage))
+  const charId = parseInt(id)
+  if (ctx.player && ctx.player.id === charId) {
+    throw new GameCommandViolationError(`You cannot attack yourself, you maniac!`)
+  }
+  const char = ctx.game.attackCharacter(charId, parseInt(damage))
   console.log(`Attacking char #${id} with ${damage} damage points`)
   console.log(`#${id} ${JSON.stringify(char)}`)
   if (!char.alive) {

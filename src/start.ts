@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createInterface } from 'readline'
 import { Game, GameError } from './Game'
-import { parseTextCommand, InvalidCommandError, CommandContext } from './TextCommands'
+import { parseTextCommand, InvalidCommandError, CommandContext, GameCommandViolationError } from './TextCommands'
 
 const VERSION = process.env.VERSION || ''
 
@@ -24,6 +24,9 @@ const main = () => {
     catch (error) {
       if (error instanceof InvalidCommandError) {
         console.log(`${error.message}. Try "help" for a list of commands.`)
+      }
+      if (error instanceof GameCommandViolationError) {
+        console.log(error.message)
       }
       else throw error
     }
